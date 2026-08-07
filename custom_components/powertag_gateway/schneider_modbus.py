@@ -982,8 +982,20 @@ class SchneiderModbus:
         # return self.client.read_device_information(read_code=DeviceInformation.REGULAR, device_id=slave_id)
 
     async def __read_string(self, address: int, count: int, slave_id: int) -> str | None:
-        registers = await self.__async_read(address, count, slave_id)
-        return self.client.convert_from_registers(registers, ModbusClientMixin.DATATYPE.STRING)
+    registers = await self.__async_read(address, count, slave_id)
+
+    if registers is None:
+        return None
+
+    raw = b"".join(
+        register.to_bytes(2, byteorder="big")
+        for register in registers
+    )
+
+    return raw.rstrip(b"\x00\xff").decode(
+        "latin-1",
+        errors="replace"
+    ).strip()
 
     async def __write_string(self, address: int, slave_id: int, string: str):
         registers = self.client.convert_to_registers(
