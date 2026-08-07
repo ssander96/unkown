@@ -2,12 +2,13 @@
   "domain": "powertag_gateway",
   "name": "PowerTag Link Gateway",
   "codeowners": [
-    "@Breina"
+    "@ssander96"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/Breina/PowerTagGateway",
+  "documentation": "https://github.com/ssander96/unkown",
+  "issue_tracker": "https://github.com/ssander96/unkown/issues",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/Breina/PowerTagGateway/issues",
+  "integration_type": "hub",
   "requirements": [
     "pymodbus>=3.9.2"
   ],
