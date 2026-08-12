@@ -8,7 +8,7 @@ from pymodbus.client import ModbusTcpClient, AsyncModbusTcpClient  # type: ignor
 from pymodbus.constants import DeviceInformation  # type: ignore
 from pymodbus.pdu import ExceptionResponse  # type: ignore
 from pymodbus.client.mixin import ModbusClientMixin  # type: ignore
-from pymodbus.exceptions import ModbusIOException  # type: ignore
+from pymodbus.exceptions import ModbusIOException, ConnectionException
 
 GATEWAY_SLAVE_ID = 255
 SYNTHESIS_TABLE_SLAVE_ID_START = 247
@@ -927,33 +927,51 @@ class SchneiderModbus:
     async def __async_read(
         self, address: int, count: int, slave_id: int
     ) -> list[int] | None:
-        try:
-            if not self.client.connected:
-                connected = await self.client.connect()
 
-                if not connected:
-                    _LOGGER.error(
-                        f"Could not connect to Modbus TCP gateway {self.client.host}:{self.client.port}"
+        for attempt in range(1, 4):
+            try:
+                if not self.client.connected:
+                    _LOGGER.warning(
+                        f"Modbus connection lost. Reconnecting, attempt {attempt}/3"
+                    )
+
+                    connected = await self.client.connect()
+
+                    if not connected:
+                        await asyncio.sleep(2)
+                        continue
+
+                result = await asyncio.wait_for(
+                    self.client.read_holding_registers(
+                        address=address,
+                        count=count,
+                        device_id=slave_id,
+                    ),
+                    timeout=5.0,
+                )
+
+                if result.isError():
+                    _LOGGER.debug(
+                        f"Modbus error reading {address} from slave ID {slave_id}"
                     )
                     return None
 
-            result = await asyncio.wait_for(
-                self.client.read_holding_registers(
-                    address=address, count=count, device_id=slave_id
-                ),
-                timeout=5.0,
-            )
-            if result.isError():
-                _LOGGER.debug(f"Modbus error reading {address} from slave ID {slave_id}")
-                return None
-            return result.registers
+                return result.registers
 
-        except asyncio.TimeoutError:
-            _LOGGER.debug(f"Timeout when fetching address {address} from slave ID {slave_id}")
-            return None
-        except ModbusIOException as e:
-            _LOGGER.error(f"Error when fetching {address} from slave ID {slave_id}: {e}")
-            return None
+            except (ConnectionException, ModbusIOException, asyncio.TimeoutError) as e:
+                _LOGGER.warning(
+                    f"Modbus read failed on attempt {attempt}/3 "
+                    f"for address {address}, slave {slave_id}: {e}"
+                )
+
+                if attempt < 3:
+                    await asyncio.sleep(2)
+
+        _LOGGER.error(
+            f"Modbus read failed after 3 attempts "
+            f"for address {address}, slave {slave_id}"
+        )
+        return None
 
     async def __async_write(
         self, address: int, registers: list[int], slave_id: int
