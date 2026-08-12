@@ -929,7 +929,13 @@ class SchneiderModbus:
     ) -> list[int] | None:
         try:
             if not self.client.connected:
-                await self.client.connect()
+                connected = await self.client.connect()
+
+                if not connected:
+                    _LOGGER.error(
+                        f"Could not connect to Modbus TCP gateway {self.client.host}:{self.client.port}"
+                    )
+                    return None
 
             result = await asyncio.wait_for(
                 self.client.read_holding_registers(
