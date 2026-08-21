@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import UniqueIdVersion
 from .device_features import FeatureClass
 from .entity_base import WirelessDeviceEntity, async_setup_entities
-from .gateway_modbus import SchneiderModbus, TypeOfGateway
+from .gateway_modbus import GatewayModbus, TypeOfGateway
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ async def async_setup_entry(
 
 
 class PowerTagResetPeakDemand(WirelessDeviceEntity, ButtonEntity):
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "reset peak demand", unique_id_version, serial_number)
 
     async def async_press(self) -> None:
@@ -55,7 +55,7 @@ class PowerTagResetPeakDemand(WirelessDeviceEntity, ButtonEntity):
 
 
 class PowerTagResetActiveEnergyDelivered(WirelessDeviceEntity, ButtonEntity):
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "reset active energy delivered", unique_id_version, serial_number)
 
     async def async_press(self) -> None:
@@ -76,7 +76,7 @@ class PowerTagResetActiveEnergyDelivered(WirelessDeviceEntity, ButtonEntity):
 
 
 class PowerTagResetActiveEnergyReceived(WirelessDeviceEntity, ButtonEntity):
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "reset active energy received", unique_id_version, serial_number)
 
     async def async_press(self) -> None:
@@ -97,7 +97,7 @@ class PowerTagResetActiveEnergyReceived(WirelessDeviceEntity, ButtonEntity):
 
 
 class PowerTagResetReactiveEnergyDelivered(WirelessDeviceEntity, ButtonEntity):
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "reset reactive energy delivered", unique_id_version, serial_number)
 
     async def async_press(self) -> None:
@@ -118,7 +118,7 @@ class PowerTagResetReactiveEnergyDelivered(WirelessDeviceEntity, ButtonEntity):
 
 
 class PowerTagResetReactiveEnergyReceived(WirelessDeviceEntity, ButtonEntity):
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "reset reactive energy received", unique_id_version, serial_number)
 
     async def async_press(self) -> None:
@@ -139,7 +139,7 @@ class PowerTagResetReactiveEnergyReceived(WirelessDeviceEntity, ButtonEntity):
 
 
 class PowerTagResetApparentEnergy(WirelessDeviceEntity, ButtonEntity):
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "reset apparent energy", unique_id_version, serial_number)
 
     async def async_press(self) -> None:
