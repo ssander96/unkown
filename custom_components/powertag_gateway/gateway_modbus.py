@@ -190,7 +190,7 @@ class TypeOfGateway(enum.Enum):
     SMARTLINK = "Smartlink SI D"
 
 
-class SchneiderModbus:
+class GatewayModbus:
     def __init__(self, host, type_of_gateway: TypeOfGateway, port=502, timeout=5):
         _LOGGER.info(f"Connecting Modbus TCP to {host}:{port}")
         self.client = AsyncModbusTcpClient(host=host, port=port, timeout=timeout)
@@ -1117,7 +1117,7 @@ class SchneiderModbus:
 
         return datetime(year, month, day, hour, minute, second, millisecond)
 
-# client = SchneiderModbus("192.168.1.114", TypeOfGateway.PANEL_SERVER)
+# client = GatewayModbus("192.168.1.114", TypeOfGateway.PANEL_SERVER)
 # print(client.modbus_address_of_node(99))
 # print(client.serial_number())
 # print(client.tag_serial_number(100))
