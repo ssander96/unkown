@@ -25,7 +25,7 @@ from .const import (
     DPWS_SERIAL_NUMBER,
     DOMAIN, CONF_TYPE_OF_GATEWAY, CONF_DEVICE_UNIQUE_ID_VERSION
 )
-from .schneider_modbus import SchneiderModbus, TypeOfGateway, LinkStatus, \
+from .gateway_modbus import SchneiderModbus, TypeOfGateway, LinkStatus, \
     PanelHealth
 from .soap_communication import Soapy, dpws_discovery
 
