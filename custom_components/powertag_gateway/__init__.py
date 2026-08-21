@@ -15,7 +15,7 @@ from .const import (
     CONF_TYPE_OF_GATEWAY,
     CONF_DEVICE_UNIQUE_ID_VERSION,
 )
-from .schneider_modbus import SchneiderModbus, TypeOfGateway
+from .gateway_modbus import SchneiderModbus, TypeOfGateway
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.BUTTON, Platform.SENSOR]
 
