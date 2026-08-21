@@ -15,7 +15,7 @@ from .const import (
     CONF_TYPE_OF_GATEWAY,
     CONF_DEVICE_UNIQUE_ID_VERSION,
 )
-from .gateway_modbus import SchneiderModbus, TypeOfGateway
+from .gateway_modbus import GatewayModbus, TypeOfGateway
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.BUTTON, Platform.SENSOR]
 
@@ -48,7 +48,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         unique_id_version = UniqueIdVersion(unique_id_version_val)
 
     try:
-        client = await SchneiderModbus.create(host, type_of_gateway, port)
+        client = await GatewayModbus.create(host, type_of_gateway, port)
     except ConnectionException as e:
         raise ConfigEntryNotReady from e
 
