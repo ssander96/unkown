@@ -25,7 +25,7 @@ from .const import (
     DPWS_SERIAL_NUMBER,
     DOMAIN, CONF_TYPE_OF_GATEWAY, CONF_DEVICE_UNIQUE_ID_VERSION
 )
-from .gateway_modbus import SchneiderModbus, TypeOfGateway, LinkStatus, \
+from .gateway_modbus import GatewayModbus, TypeOfGateway, LinkStatus, \
     PanelHealth
 from .soap_communication import Soapy, dpws_discovery
 
@@ -46,7 +46,7 @@ class DiscoveredDevice:
     async def create(cls, content: str, type_of_gateway: TypeOfGateway):
         instance = cls(content, type_of_gateway)
         try:
-            await SchneiderModbus.create(instance.host, instance.type_of_gateway, DEFAULT_MODBUS_PORT, timeout=1)
+            await GatewayModbus.create(instance.host, instance.type_of_gateway, DEFAULT_MODBUS_PORT, timeout=1)
             instance.port = DEFAULT_MODBUS_PORT
         except ConnectionException:
             instance.port = None
@@ -215,7 +215,7 @@ class PowerTagFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         type_of_gateway = [t for t in TypeOfGateway if t.value == self.type_of_gateway][0]
 
         logging.info("Setting up modbus client...")
-        self.client = await SchneiderModbus.create(self.host, type_of_gateway, self.port)
+        self.client = await GatewayModbus.create(self.host, type_of_gateway, self.port)
 
         logging.info("Checking status...")
         if (((type_of_gateway in [TypeOfGateway.POWERTAG_LINK, TypeOfGateway.SMARTLINK]) and await self.client.status() != LinkStatus.OPERATING)
