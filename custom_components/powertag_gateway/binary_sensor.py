@@ -10,7 +10,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import CONF_CLIENT, DOMAIN, UniqueIdVersion
 from .device_features import FeatureClass
 from .entity_base import WirelessDeviceEntity, GatewayEntity, async_setup_entities, gateway_device_info
-from .gateway_modbus import SchneiderModbus, LinkStatus, PanelHealth, TypeOfGateway
+from .gateway_modbus import GatewayModbus, LinkStatus, PanelHealth, TypeOfGateway
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class PowerTagWirelessCommunicationValid(WirelessDeviceEntity, BinarySensorEntit
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
 
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "wireless communication valid", unique_id_version, serial_number)
 
     async def async_update(self):
@@ -74,7 +74,7 @@ class PowerTagRadioCommunicationValid(WirelessDeviceEntity, BinarySensorEntity):
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
 
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "radio communication valid", unique_id_version, serial_number)
 
     async def async_update(self):
@@ -97,7 +97,7 @@ class PowerTagRadioCommunicationValid(WirelessDeviceEntity, BinarySensorEntity):
 class PowerTagAlarm(WirelessDeviceEntity, BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
 
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "alarm info", unique_id_version, serial_number)
 
     async def async_update(self):
@@ -131,7 +131,7 @@ class PowerTagAlarm(WirelessDeviceEntity, BinarySensorEntity):
 class AmbientTagAlarm(WirelessDeviceEntity, BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
 
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "battery", unique_id_version, serial_number)
 
     async def async_update(self):
@@ -152,7 +152,7 @@ class GatewayStatus(GatewayEntity, BinarySensorEntity):
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
 
-    def __init__(self, client: SchneiderModbus, tag_device: DeviceInfo, serial_number: str):
+    def __init__(self, client: GatewayModbus, tag_device: DeviceInfo, serial_number: str):
         super().__init__(client, tag_device, "status", serial_number)
         self._attr_extra_state_attributes = {}
 
@@ -186,7 +186,7 @@ class GatewayHealth(GatewayEntity, BinarySensorEntity):
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
 
-    def __init__(self, client: SchneiderModbus, tag_device: DeviceInfo, serial_number: str):
+    def __init__(self, client: GatewayModbus, tag_device: DeviceInfo, serial_number: str):
         super().__init__(client, tag_device, "health", serial_number)
         self._attr_extra_state_attributes = {}
 
