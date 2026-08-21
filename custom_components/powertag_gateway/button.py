@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import UniqueIdVersion
 from .device_features import FeatureClass
 from .entity_base import WirelessDeviceEntity, async_setup_entities
-from .schneider_modbus import SchneiderModbus, TypeOfGateway
+from .gateway_modbus import SchneiderModbus, TypeOfGateway
 
 _LOGGER = logging.getLogger(__name__)
 
