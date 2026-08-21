@@ -1,4 +1,4 @@
-"""Platform for Schneider Energy."""
+"""Platform for SS Energy."""
 
 import logging
 
@@ -22,7 +22,7 @@ from .entity_base import (
     gateway_device_info,
 )
 from .gateway_modbus import (
-    SchneiderModbus,
+    GatewayModbus,
     Phase,
     LineVoltage,
     PowerFactorSignConvention,
@@ -114,7 +114,7 @@ class GatewayTime(GatewayEntity, SensorEntity):
     _attr_device_class = SensorDeviceClass.TIMESTAMP
 
     def __init__(
-        self, client: SchneiderModbus, tag_device: DeviceInfo, serial_number: str
+        self, client: GatewayModbus, tag_device: DeviceInfo, serial_number: str
     ):
         super().__init__(client, tag_device, "datetime", serial_number)
 
@@ -139,7 +139,7 @@ class PowerTagTotalActiveEnergy(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -195,7 +195,7 @@ class PowerTagReactivePower(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -243,7 +243,7 @@ class PowerTagReactivePowerPerPhase(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -285,7 +285,7 @@ class PowerTagApparentPower(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -339,7 +339,7 @@ class PowerTagApparentPowerPerPhase(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -381,7 +381,7 @@ class PowerTagPowerFactor(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         feature_class: FeatureClass,
@@ -450,7 +450,7 @@ class PowerTagPowerFactorPerPhase(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -506,7 +506,7 @@ class PowerTagPartialActiveEnergyDelivered(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -558,7 +558,7 @@ class PowerTagTotalActiveEnergyDelivered(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -610,7 +610,7 @@ class PowerTagPartialActiveEnergyDeliveredPerPhase(WirelessDeviceEntity, SensorE
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -663,7 +663,7 @@ class PowerTagTotalActiveEnergyDeliveredPerPhase(WirelessDeviceEntity, SensorEnt
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -716,7 +716,7 @@ class PowerTagPartialActiveEnergyReceived(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -768,7 +768,7 @@ class PowerTagTotalActiveEnergyReceived(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -820,7 +820,7 @@ class PowerTagPartialActiveEnergyReceivedPerPhase(WirelessDeviceEntity, SensorEn
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -873,7 +873,7 @@ class PowerTagTotalActiveEnergyReceivedPerPhase(WirelessDeviceEntity, SensorEnti
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -928,7 +928,7 @@ class PowerTagPartialActiveEnergyDeliveredAndReceived(
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -980,7 +980,7 @@ class PowerTagPartialReactiveEnergyDelivered(WirelessDeviceEntity, SensorEntity)
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1027,7 +1027,7 @@ class PowerTagTotalReactiveEnergyDelivered(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1068,7 +1068,7 @@ class PowerTagPartialReactiveEnergyDeliveredPerPhase(
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -1117,7 +1117,7 @@ class PowerTagTotalReactiveEnergyDeliveredPerPhase(WirelessDeviceEntity, SensorE
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -1166,7 +1166,7 @@ class PowerTagPartialReactiveEnergyReceived(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1213,7 +1213,7 @@ class PowerTagTotalReactiveEnergyReceived(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1260,7 +1260,7 @@ class PowerTagPartialReactiveEnergyReceivedPerPhase(WirelessDeviceEntity, Sensor
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -1309,7 +1309,7 @@ class PowerTagTotalReactiveEnergyReceivedPerPhase(WirelessDeviceEntity, SensorEn
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -1359,7 +1359,7 @@ class PowerTagPartialApparentEnergy(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1399,7 +1399,7 @@ class PowerTagTotalApparentEnergy(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1439,7 +1439,7 @@ class PowerTagPartialApparentEnergyPerPhase(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -1480,7 +1480,7 @@ class PowerTagTotalApparentEnergyPerPhase(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -1521,7 +1521,7 @@ class PowerTagCurrent(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -1585,7 +1585,7 @@ class PowerTagCurrentNeutral(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1634,7 +1634,7 @@ class PowerTagVoltage(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         line: LineVoltage,
@@ -1699,7 +1699,7 @@ class PowerTagFrequency(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1746,7 +1746,7 @@ class PowerTagTemperature(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1770,7 +1770,7 @@ class PowerTagTemperature(WirelessDeviceEntity, SensorEntity):
     def supports_feature_set(feature_class: FeatureClass) -> bool:
         """
         The documentation says that A1, A2, P1, F1, F2 and F3 do not support internal temperature.
-        However, they do seem to report temperature values, so let's use them. Let's not tell Schneider about this. ;)
+        However, they do seem to report temperature values, so let's use them.
         """
         return feature_class in [
             FeatureClass.A1,
@@ -1811,7 +1811,7 @@ class PowerTagActivePower(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1865,7 +1865,7 @@ class PowerTagActivePowerPerPhase(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         phase: Phase,
@@ -1919,7 +1919,7 @@ class PowerTagDemandActivePower(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -1969,7 +1969,7 @@ class EnvTagBatteryVoltage(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -2005,7 +2005,7 @@ class EnvTagTemperature(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -2057,7 +2057,7 @@ class EnvTagHumidity(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -2110,7 +2110,7 @@ class EnvTagCO2(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -2142,7 +2142,7 @@ class DeviceRssiTag(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -2203,7 +2203,7 @@ class DeviceRssiGateway(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -2262,7 +2262,7 @@ class DeviceLqiTag(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -2321,7 +2321,7 @@ class DeviceLqiGateway(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -2380,7 +2380,7 @@ class DevicePerTag(WirelessDeviceEntity, SensorEntity):
 
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         unique_id_version: UniqueIdVersion,
@@ -2437,7 +2437,7 @@ class DevicePerGateway(WirelessDeviceEntity, SensorEntity):
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_state_class = SensorStateClass.MEASUREMENT
 
-    def __init__(self, client: SchneiderModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
+    def __init__(self, client: GatewayModbus, modbus_index: int, tag_device: DeviceInfo, unique_id_version: UniqueIdVersion, serial_number: str):
         super().__init__(client, modbus_index, tag_device, "packet error rate in gateway", unique_id_version, serial_number)
 
     async def async_update(self):
