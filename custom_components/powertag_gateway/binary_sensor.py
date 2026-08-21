@@ -10,7 +10,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import CONF_CLIENT, DOMAIN, UniqueIdVersion
 from .device_features import FeatureClass
 from .entity_base import WirelessDeviceEntity, GatewayEntity, async_setup_entities, gateway_device_info
-from .schneider_modbus import SchneiderModbus, LinkStatus, PanelHealth, TypeOfGateway
+from .gateway_modbus import SchneiderModbus, LinkStatus, PanelHealth, TypeOfGateway
 
 _LOGGER = logging.getLogger(__name__)
 
