@@ -1,4 +1,4 @@
-"""PowerTag Link Gateway integration"""
+"""Link Gateway integration"""
 
 import logging
 from enum import Enum, auto
@@ -29,7 +29,7 @@ class UniqueIdVersion(Enum):
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up EcoStruxure PowerTag Link Gateway from a config entry."""
+    """Set up Link Gateway from a config entry."""
     hass.data.setdefault(DOMAIN, {})
 
     host = entry.data.get(CONF_HOST)
