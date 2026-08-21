@@ -840,7 +840,7 @@ class SchneiderModbus:
         elif self.type_of_gateway is TypeOfGateway.PANEL_SERVER:
             return await self.__read_string(0x009F, 16, GATEWAY_SLAVE_ID)
         elif self.type_of_gateway is TypeOfGateway.SMARTLINK:
-            return "Schneider Electric"
+            return "SS Energy"
         else:
             return None
 
