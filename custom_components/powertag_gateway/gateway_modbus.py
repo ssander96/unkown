@@ -185,9 +185,9 @@ class ElectricalNetworkSystemType(enum.Enum):
 
 
 class TypeOfGateway(enum.Enum):
-    PANEL_SERVER = "Panel server"
-    POWERTAG_LINK = "Powertag Link"
-    SMARTLINK = "Smartlink SI D"
+    PANEL_GATEWAY = "Panel Gateway"
+    LINK_GATEWAY = "Link Gateway"
+    LEGACY_GATEWAY = "Legacy Gateway"
 
 
 class GatewayModbus:
@@ -200,7 +200,7 @@ class GatewayModbus:
     @classmethod
     async def create(cls, host, type_of_gateway: TypeOfGateway, port=502, timeout=5):
         instance = cls(host, type_of_gateway, port, timeout)
-        if type_of_gateway is TypeOfGateway.POWERTAG_LINK:
+        if type_of_gateway is TypeOfGateway.LINK_GATEWAY:
             instance.synthetic_slave_id = await instance.find_synthetic_table_slave_id()
         return instance
 
@@ -221,7 +221,7 @@ class GatewayModbus:
         """Gateway Hardware version
         valid for firmware version 001.008.007 and later.
         """
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return await self.__read_string(0x006A, 3, GATEWAY_SLAVE_ID)
         else:
             return await self.__read_string(0x0050, 6, GATEWAY_SLAVE_ID)
@@ -238,7 +238,7 @@ class GatewayModbus:
 
     async def firmware_version(self) -> str | None:
         """valid for firmware version 001.008.007 and later."""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return await self.__read_string(0x006D, 3, GATEWAY_SLAVE_ID)
         else:
             return await self.__read_string(0x0078, 6, GATEWAY_SLAVE_ID)
@@ -248,8 +248,8 @@ class GatewayModbus:
     async def status(self) -> LinkStatus | None:
         """PowerTag Link gateway status and diagnostic register"""
         assert self.type_of_gateway in [
-            TypeOfGateway.POWERTAG_LINK,
-            TypeOfGateway.SMARTLINK,
+            TypeOfGateway.LINK_GATEWAY,
+            TypeOfGateway.LEGACY_GATEWAY,
         ]
         bitmap = await self.__read_int_16(0x0070, GATEWAY_SLAVE_ID)
         try:
@@ -262,7 +262,7 @@ class GatewayModbus:
 
     async def health(self) -> PanelHealth | None:
         """PowerTag Link gateway status and diagnostic register"""
-        assert self.type_of_gateway == TypeOfGateway.PANEL_SERVER
+        assert self.type_of_gateway == TypeOfGateway.PANEL_GATEWAY
         code = await self.__read_int_16(0x009E, GATEWAY_SLAVE_ID)
         return PanelHealth(code) if code is not None else None
 
@@ -363,7 +363,7 @@ class GatewayModbus:
 
     async def tag_reset_energy_active_delivered_partial(self, tag_index: int):
         """Set partial active energy delivered counter. The value returns to zero by PowerTag Link gateway"""
-        if self.type_of_gateway == TypeOfGateway.PANEL_SERVER:
+        if self.type_of_gateway == TypeOfGateway.PANEL_GATEWAY:
             await self.__write_int_64(0x1390, tag_index, 0)  # All
             await self.__write_int_64(0x13B8, tag_index, 0)  # Phase A
             await self.__write_int_64(0x13E0, tag_index, 0)  # Phase B
@@ -373,7 +373,7 @@ class GatewayModbus:
 
     async def tag_reset_energy_active_received_partial(self, tag_index: int):
         """Set partial active energy received counter. The value returns to zero by PowerTag Link gateway."""
-        if self.type_of_gateway == TypeOfGateway.PANEL_SERVER:
+        if self.type_of_gateway == TypeOfGateway.PANEL_GATEWAY:
             await self.__write_int_64(0x1398, tag_index, 0)  # All
             await self.__write_int_64(0x13C0, tag_index, 0)  # Phase A
             await self.__write_int_64(0x13E8, tag_index, 0)  # Phase B
@@ -383,7 +383,7 @@ class GatewayModbus:
 
     async def tag_reset_energy_reactive_delivered_partial(self, tag_index: int):
         """Set partial reactive energy delivered counter. The value returns to zero by PowerTag Link gateway."""
-        if self.type_of_gateway == TypeOfGateway.PANEL_SERVER:
+        if self.type_of_gateway == TypeOfGateway.PANEL_GATEWAY:
             await self.__write_int_64(0x1438, tag_index, 0)  # All
             await self.__write_int_64(0x1470, tag_index, 0)  # Phase A
             await self.__write_int_64(0x1498, tag_index, 0)  # Phase B
@@ -393,7 +393,7 @@ class GatewayModbus:
 
     async def tag_reset_energy_reactive_received_partial(self, tag_index: int):
         """Set partial reactive energy received counter. The value returns to zero by PowerTag Link gateway."""
-        if self.type_of_gateway == TypeOfGateway.PANEL_SERVER:
+        if self.type_of_gateway == TypeOfGateway.PANEL_GATEWAY:
             await self.__write_int_64(0x1448, tag_index, 0)  # All
             await self.__write_int_64(0x1478, tag_index, 0)  # Phase A
             await self.__write_int_64(0x14A0, tag_index, 0)  # Phase B
@@ -403,7 +403,7 @@ class GatewayModbus:
 
     async def tag_reset_energy_apparent_partial(self, tag_index: int):
         """Set partial apparent energy counter. The value returns to zero by PowerTag Link gateway."""
-        assert self.type_of_gateway == TypeOfGateway.PANEL_SERVER
+        assert self.type_of_gateway == TypeOfGateway.PANEL_GATEWAY
         await self.__write_int_64(0x14F4, tag_index, 0)  # All
         await self.__write_int_64(0x150C, tag_index, 0)  # Phase A
         await self.__write_int_64(0x1534, tag_index, 0)  # Phase B
@@ -411,28 +411,28 @@ class GatewayModbus:
 
     async def tag_energy_active_delivered_partial(self, tag_index: int) -> int | None:
         """Active energy delivered (resettable)"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return await self.__read_int_64(0x0C87, tag_index)
         else:
             return await self.__read_int_64(0x1390, tag_index)
 
     async def tag_energy_active_delivered_total(self, tag_index: int) -> int | None:
         """Active energy delivered count positively (not resettable)"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return await self.__read_int_64(0x0, tag_index)
         else:
             return await self.__read_int_64(0x1394, tag_index)
 
     async def tag_energy_active_received_partial(self, tag_index: int) -> int | None:
         """Active energy received (resettable)"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return await self.__read_int_64(0x0CC7, tag_index)
         else:
             return await self.__read_int_64(0x1398, tag_index)
 
     async def tag_energy_active_received_total(self, tag_index: int) -> int | None:
         """Active energy received count negatively (not resettable)"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return await self.__read_int_64(0x0C8B, tag_index)
         else:
             return await self.__read_int_64(0x139C, tag_index)
@@ -463,7 +463,7 @@ class GatewayModbus:
 
     async def tag_energy_reactive_delivered_partial(self, tag_index: int) -> int | None:
         """Reactive energy delivered (resettable)"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return await self.__read_int_64(0x0CCF, tag_index)
         else:
             return await self.__read_int_64(0x1438, tag_index)
@@ -474,7 +474,7 @@ class GatewayModbus:
 
     async def tag_energy_reactive_received_partial(self, tag_index: int) -> int | None:
         """Reactive energy received (resettable)"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return await self.__read_int_64(0x0CD7, tag_index)
         else:
             return await self.__read_int_64(0x1488, tag_index)
@@ -549,7 +549,7 @@ class GatewayModbus:
 
     async def tag_is_alarm_valid(self, tag_index: int) -> AlarmDetails | bool | None:
         """Validity of the alarm bitmap"""
-        if self.type_of_gateway is TypeOfGateway.PANEL_SERVER:
+        if self.type_of_gateway is TypeOfGateway.PANEL_GATEWAY:
             alarm_valid = await self.__read_int_32(0xCE1, tag_index)
             return AlarmDetails(alarm_valid) if alarm_valid is not None else None
         else:
@@ -631,7 +631,7 @@ class GatewayModbus:
 
     async def tag_rated_voltage(self, tag_index: int) -> float | None:
         """Rated voltage"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return None
         return await self.__read_float_32(0x792B, tag_index)
 
@@ -641,7 +641,7 @@ class GatewayModbus:
 
     async def tag_power_supply_type(self, tag_index: int) -> Position | None:
         """Power supply type"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             return Position.INVALID
         position = await self.__read_int_16(0x792F, tag_index)
         return Position(position) if position is not None else None
@@ -653,7 +653,7 @@ class GatewayModbus:
 
     async def tag_product_identifier(self, tag_index: int) -> int | None:
         """Wireless device code type"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             try:
                 return await self.__read_int_16(0x7930, tag_index)
 
@@ -669,7 +669,7 @@ class GatewayModbus:
 
     async def tag_product_type(self, tag_index: int) -> ProductType | None:
         """Wireless device code type"""
-        if self.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             try:
                 identifier = self.__read_int_16(0x7930, tag_index)
                 if not identifier:
@@ -713,7 +713,7 @@ class GatewayModbus:
 
     async def tag_product_code(self, tag_index: int) -> str | None:
         """Wireless device commercial reference"""
-        if self.type_of_gateway is TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway is TypeOfGateway.LEGACY_GATEWAY:
             return None
         return await self.__read_string(0x7954, 16, tag_index)
 
@@ -739,7 +739,7 @@ class GatewayModbus:
 
     async def tag_product_family(self, tag_index: int) -> str | None:
         """Product family"""
-        if self.type_of_gateway is TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway is TypeOfGateway.LEGACY_GATEWAY:
             return None
         return await self.__read_string(0x798A, 8, tag_index)
 
@@ -826,67 +826,67 @@ class GatewayModbus:
 
     async def product_id(self) -> int | None:
         """Product ID of the synthesis table"""
-        if self.type_of_gateway is TypeOfGateway.POWERTAG_LINK:
+        if self.type_of_gateway is TypeOfGateway.LINK_GATEWAY:
             return await self.__read_int_16(0x0001, self.synthetic_slave_id)
-        elif self.type_of_gateway is TypeOfGateway.PANEL_SERVER:
+        elif self.type_of_gateway is TypeOfGateway.PANEL_GATEWAY:
             return await self.__read_int_16(0xF002, GATEWAY_SLAVE_ID)
         else:
             return None
 
     async def manufacturer(self) -> str | None:
         """Product ID of the synthesis table"""
-        if self.type_of_gateway is TypeOfGateway.POWERTAG_LINK:
+        if self.type_of_gateway is TypeOfGateway.LINK_GATEWAY:
             return await self.__read_string(0x0002, 16, self.synthetic_slave_id)
-        elif self.type_of_gateway is TypeOfGateway.PANEL_SERVER:
+        elif self.type_of_gateway is TypeOfGateway.PANEL_GATEWAY:
             return await self.__read_string(0x009F, 16, GATEWAY_SLAVE_ID)
-        elif self.type_of_gateway is TypeOfGateway.SMARTLINK:
+        elif self.type_of_gateway is TypeOfGateway.LEGACY_GATEWAY:
             return "SS Energy"
         else:
             return None
 
     async def product_code(self) -> str | None:
         """Commercial reference of the gateway"""
-        if self.type_of_gateway is TypeOfGateway.POWERTAG_LINK:
+        if self.type_of_gateway is TypeOfGateway.LINK_GATEWAY:
             return await self.__read_string(0x0012, 16, self.synthetic_slave_id)
-        elif self.type_of_gateway is TypeOfGateway.PANEL_SERVER:
+        elif self.type_of_gateway is TypeOfGateway.PANEL_GATEWAY:
             return await self.__read_string(0x003C, 16, GATEWAY_SLAVE_ID)
-        elif self.type_of_gateway is TypeOfGateway.SMARTLINK:
+        elif self.type_of_gateway is TypeOfGateway.LEGACY_GATEWAY:
             return "A9XMWA20"
         else:
             return None
 
     async def product_range(self) -> str | None:
         """Product range of the gateway"""
-        if self.type_of_gateway is TypeOfGateway.POWERTAG_LINK:
+        if self.type_of_gateway is TypeOfGateway.LINK_GATEWAY:
             return await self.__read_string(0x0022, 8, self.synthetic_slave_id)
-        elif self.type_of_gateway is TypeOfGateway.PANEL_SERVER:
+        elif self.type_of_gateway is TypeOfGateway.PANEL_GATEWAY:
             return await self.__read_string(0x000A, 16, GATEWAY_SLAVE_ID)
         else:
             return "Unknown"
 
     async def product_model(self) -> str | None:
         """Product model"""
-        if self.type_of_gateway is TypeOfGateway.POWERTAG_LINK:
+        if self.type_of_gateway is TypeOfGateway.LINK_GATEWAY:
             return await self.__read_string(0x002A, 8, self.synthetic_slave_id)
-        elif self.type_of_gateway is TypeOfGateway.PANEL_SERVER:
+        elif self.type_of_gateway is TypeOfGateway.PANEL_GATEWAY:
             return await self.__read_string(0xF003, 16, GATEWAY_SLAVE_ID)
         else:
-            return "Smartlink SI D"
+            return "LEGACY_GATEWAY SI D"
 
     async def name(self) -> str | None:
         """Asset name"""
-        if self.type_of_gateway is TypeOfGateway.POWERTAG_LINK:
+        if self.type_of_gateway is TypeOfGateway.LINK_GATEWAY:
             return await self.__read_string(0x0032, 10, self.synthetic_slave_id)
-        elif self.type_of_gateway is TypeOfGateway.PANEL_SERVER:
+        elif self.type_of_gateway is TypeOfGateway.PANEL_GATEWAY:
             return await self.__read_string(0x1605, 32, GATEWAY_SLAVE_ID)
         else:
             return "Unknown"
 
     async def product_vendor_url(self) -> str | None:
         """Vendor URL"""
-        if self.type_of_gateway is TypeOfGateway.POWERTAG_LINK:
+        if self.type_of_gateway is TypeOfGateway.LINK_GATEWAY:
             return await self.__read_string(0x003C, 17, self.synthetic_slave_id)
-        elif self.type_of_gateway is TypeOfGateway.PANEL_SERVER:
+        elif self.type_of_gateway is TypeOfGateway.PANEL_GATEWAY:
             return await self.__read_string(0x002A, 17, GATEWAY_SLAVE_ID)
         else:
             return "Unknown"
@@ -894,9 +894,9 @@ class GatewayModbus:
     # Wireless Configured Devices – 100 Devices
 
     async def modbus_address_of_node(self, node_index: int) -> int | None:
-        if self.type_of_gateway is TypeOfGateway.SMARTLINK:
+        if self.type_of_gateway is TypeOfGateway.LEGACY_GATEWAY:
             return 150 + node_index - 1
-        elif self.type_of_gateway is TypeOfGateway.POWERTAG_LINK:
+        elif self.type_of_gateway is TypeOfGateway.LINK_GATEWAY:
             return await self.__read_int_16(
                 0x012C + node_index - 1, self.synthetic_slave_id
             )
@@ -1117,7 +1117,7 @@ class GatewayModbus:
 
         return datetime(year, month, day, hour, minute, second, millisecond)
 
-# client = GatewayModbus("192.168.1.114", TypeOfGateway.PANEL_SERVER)
+# client = GatewayModbus("192.168.1.114", TypeOfGateway.PANEL_GATEWAY)
 # print(client.modbus_address_of_node(99))
 # print(client.serial_number())
 # print(client.tag_serial_number(100))
