@@ -21,7 +21,7 @@ from .entity_base import (
     async_setup_entities,
     gateway_device_info,
 )
-from .schneider_modbus import (
+from .gateway_modbus import (
     SchneiderModbus,
     Phase,
     LineVoltage,
