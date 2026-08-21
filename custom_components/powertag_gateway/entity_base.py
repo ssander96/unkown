@@ -18,7 +18,7 @@ from .device_features import (
     from_wireless_device_type_code,
 )
 from .gateway_modbus import (
-    SchneiderModbus,
+    GatewayModbus,
     Phase,
     LineVoltage,
     PhaseSequence,
@@ -29,7 +29,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def gateway_device_info(
-    client: SchneiderModbus, presentation_url: str
+    client: GatewayModbus, presentation_url: str
 ) -> DeviceInfo:
     serial = await client.serial_number()
     name = await client.name()
@@ -51,7 +51,7 @@ async def gateway_device_info(
 
 
 async def tag_device_info(
-    client: SchneiderModbus,
+    client: GatewayModbus,
     modbus_index: int,
     presentation_url: str,
     gateway_identification: tuple[str, str],
@@ -136,7 +136,7 @@ def phase_sequence_to_line_voltages(
 
 class GatewayEntity(Entity):
     def __init__(
-        self, client: SchneiderModbus, tag_device: DeviceInfo, sensor_name: str, serial_number: str
+        self, client: GatewayModbus, tag_device: DeviceInfo, sensor_name: str, serial_number: str
     ):
         self._client = client
         self._attr_device_info = tag_device
@@ -156,7 +156,7 @@ class GatewayEntity(Entity):
 class WirelessDeviceEntity(Entity):
     def __init__(
         self,
-        client: SchneiderModbus,
+        client: GatewayModbus,
         modbus_index: int,
         tag_device: DeviceInfo,
         entity_name: str,
@@ -192,7 +192,7 @@ class WirelessDeviceEntity(Entity):
 
 
 def collect_entities(
-    client: SchneiderModbus,
+    client: GatewayModbus,
     entities: list[Entity],
     feature_class: FeatureClass,
     modbus_address: int,
@@ -209,7 +209,7 @@ def collect_entities(
     enumerate_param = None
     for param in params:
         typey = param[1].annotation
-        if typey == SchneiderModbus:
+        if typey == GatewayModbus:
             args.append(client)
         elif typey == DeviceInfo:
             args.append(tag_device)
