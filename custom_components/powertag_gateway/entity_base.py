@@ -17,7 +17,7 @@ from .device_features import (
     UnknownDevice,
     from_wireless_device_type_code,
 )
-from .schneider_modbus import (
+from .gateway_modbus import (
     SchneiderModbus,
     Phase,
     LineVoltage,
