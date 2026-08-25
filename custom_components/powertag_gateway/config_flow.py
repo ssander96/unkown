@@ -69,7 +69,7 @@ async def async_discovery(hass: HomeAssistant) -> list[DiscoveredDevice]:
 
     for service in services:
         soapy = Soapy(service, hass)
-        type_of_gateway = TypeOfGateway.PANEL_SERVER if soapy.is_panel_server() else TypeOfGateway.POWERTAG_LINK
+        type_of_gateway = TypeOfGateway.PANEL_GATEWAY if soapy.is_panel_server() else TypeOfGateway.LINK_GATEWAY
         result = await soapy.transfer_get()
         if result.status_code != 200:
             continue
@@ -100,7 +100,7 @@ class PowerTagFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self.model_name = None
         self.presentation_url = None
         self.name = None
-        self.type_of_gateway = TypeOfGateway.POWERTAG_LINK.value
+        self.type_of_gateway = TypeOfGateway.LINK_GATEWAY.value
 
         self.skip_degradation_warning = False
         self.status = None
@@ -183,9 +183,9 @@ class PowerTagFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_PORT, default=self.port): cv.port,
                     vol.Required(CONF_TYPE_OF_GATEWAY, default=self.type_of_gateway):
                         vol.In([
-                            TypeOfGateway.POWERTAG_LINK.value,
-                            TypeOfGateway.SMARTLINK.value,
-                            TypeOfGateway.PANEL_SERVER.value,
+                            TypeOfGateway.LINK_GATEWAY.value,
+                            TypeOfGateway.LEGACY_GATEWAY.value,
+                            TypeOfGateway.PANEL_GATEWAY.value,
                         ])
                 }
             ),
@@ -218,10 +218,10 @@ class PowerTagFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self.client = await GatewayModbus.create(self.host, type_of_gateway, self.port)
 
         logging.info("Checking status...")
-        if (((type_of_gateway in [TypeOfGateway.POWERTAG_LINK, TypeOfGateway.SMARTLINK]) and await self.client.status() != LinkStatus.OPERATING)
-                or (type_of_gateway is TypeOfGateway.PANEL_SERVER and await self.client.health() != PanelHealth.NOMINAL)):
+        if (((type_of_gateway in [TypeOfGateway.LINK_GATEWAY, TypeOfGateway.LEGACY_GATEWAY]) and await self.client.status() != LinkStatus.OPERATING)
+                or (type_of_gateway is TypeOfGateway.PANEL_GATEWAY and await self.client.health() != PanelHealth.NOMINAL)):
             if not self.skip_degradation_warning:
-                self.status = await self.client.health() if type_of_gateway is TypeOfGateway.PANEL_SERVER else await self.client.status()
+                self.status = await self.client.health() if type_of_gateway is TypeOfGateway.PANEL_GATEWAY else await self.client.status()
                 return await self.async_step_degraded()
 
         logging.info("Retrieving serial number...")
