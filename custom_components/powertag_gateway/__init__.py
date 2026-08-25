@@ -36,7 +36,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     port = entry.data.get(CONF_PORT)
     presentation_url = entry.data.get(CONF_INTERNAL_URL)
     type_of_gateway_string = entry.data.get(
-        CONF_TYPE_OF_GATEWAY, TypeOfGateway.POWERTAG_LINK.value
+        CONF_TYPE_OF_GATEWAY, TypeOfGateway.LINK_GATEWAY.value
     )
 
     type_of_gateway = [t for t in TypeOfGateway if t.value == type_of_gateway_string][0]
