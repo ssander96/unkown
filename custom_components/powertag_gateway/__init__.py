@@ -36,11 +36,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     port = entry.data.get(CONF_PORT)
     presentation_url = entry.data.get(CONF_INTERNAL_URL)
     type_of_gateway_string = entry.data.get(
-        CONF_TYPE_OF_GATEWAY, TypeOfGateway.LINK_GATEWAY.value
+    CONF_TYPE_OF_GATEWAY, TypeOfGateway.LINK_GATEWAY.value
+)
+
+legacy_gateway_map = {
+    "Powertag Link": TypeOfGateway.LINK_GATEWAY,
+    "Panel server": TypeOfGateway.PANEL_GATEWAY,
+    "Smartlink SI D": TypeOfGateway.LEGACY_GATEWAY,
+}
+
+type_of_gateway = legacy_gateway_map.get(type_of_gateway_string)
+
+if type_of_gateway is None:
+    type_of_gateway = next(
+        (t for t in TypeOfGateway if t.value == type_of_gateway_string),
+        TypeOfGateway.LINK_GATEWAY,
     )
-
-    type_of_gateway = [t for t in TypeOfGateway if t.value == type_of_gateway_string][0]
-
     unique_id_version_val = entry.data.get(CONF_DEVICE_UNIQUE_ID_VERSION)
     if unique_id_version_val is None:
         unique_id_version = UniqueIdVersion.V0
