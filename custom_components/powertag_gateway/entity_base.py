@@ -278,7 +278,7 @@ async def async_setup_entities(
         _LOGGER.debug(f"Found device #{i} at address {modbus_address}")
 
         if modbus_address is None:
-            if client.type_of_gateway == TypeOfGateway.PANEL_SERVER:
+            if client.type_of_gateway == TypeOfGateway.PANEL_GATEWAY:
                 # PanelServers can have out of order devices, so make sure to just scan everything
                 continue
             else:
