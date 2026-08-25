@@ -114,7 +114,7 @@ class PowerTagResetReactiveEnergyDelivered(WirelessDeviceEntity, ButtonEntity):
 
     @staticmethod
     def supports_gateway(type_of_gateway: TypeOfGateway) -> bool:
-        return type_of_gateway in [TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_SERVER]
+        return type_of_gateway in [TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_GATEWAY]
 
 
 class PowerTagResetReactiveEnergyReceived(WirelessDeviceEntity, ButtonEntity):
@@ -135,7 +135,7 @@ class PowerTagResetReactiveEnergyReceived(WirelessDeviceEntity, ButtonEntity):
 
     @staticmethod
     def supports_gateway(type_of_gateway: TypeOfGateway) -> bool:
-        return type_of_gateway in [TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_SERVER]
+        return type_of_gateway in [TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_GATEWAY]
 
 
 class PowerTagResetApparentEnergy(WirelessDeviceEntity, ButtonEntity):
@@ -154,4 +154,4 @@ class PowerTagResetApparentEnergy(WirelessDeviceEntity, ButtonEntity):
 
     @staticmethod
     def supports_gateway(type_of_gateway: TypeOfGateway) -> bool:
-        return type_of_gateway in [TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_SERVER]
+        return type_of_gateway in [TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_GATEWAY]
