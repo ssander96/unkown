@@ -67,7 +67,7 @@ class PowerTagWirelessCommunicationValid(WirelessDeviceEntity, BinarySensorEntit
 
     @staticmethod
     def supports_gateway(type_of_gateway: TypeOfGateway) -> bool:
-        return type_of_gateway in [     TypeOfGateway.LEGACY_GATEWAY,     TypeOfGateway.LINK_GATEWAY,     TypeOfGateway.PANEL_GATEWAY, ]
+        return type_of_gateway in [TypeOfGateway.SMARTLINK, TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_SERVER]
 
 
 class PowerTagRadioCommunicationValid(WirelessDeviceEntity, BinarySensorEntity):
@@ -91,7 +91,7 @@ class PowerTagRadioCommunicationValid(WirelessDeviceEntity, BinarySensorEntity):
 
     @staticmethod
     def supports_gateway(type_of_gateway: TypeOfGateway) -> bool:
-        return type_of_gateway in [     TypeOfGateway.LEGACY_GATEWAY,     TypeOfGateway.LINK_GATEWAY,     TypeOfGateway.PANEL_GATEWAY, ]
+        return type_of_gateway in [TypeOfGateway.SMARTLINK, TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_SERVER]
 
 
 class PowerTagAlarm(WirelessDeviceEntity, BinarySensorEntity):
@@ -125,7 +125,7 @@ class PowerTagAlarm(WirelessDeviceEntity, BinarySensorEntity):
 
     @staticmethod
     def supports_gateway(type_of_gateway: TypeOfGateway) -> bool:
-        return type_of_gateway in [     TypeOfGateway.LEGACY_GATEWAY,     TypeOfGateway.LINK_GATEWAY,     TypeOfGateway.PANEL_GATEWAY, ]
+        return type_of_gateway in [TypeOfGateway.SMARTLINK, TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_SERVER]
 
 
 class AmbientTagAlarm(WirelessDeviceEntity, BinarySensorEntity):
