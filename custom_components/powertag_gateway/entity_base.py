@@ -284,7 +284,7 @@ async def async_setup_entities(
             else:
                 break
 
-        if client.type_of_gateway == TypeOfGateway.SMARTLINK:
+        if client.type_of_gateway == TypeOfGateway.LEGACY_GATEWAY:
             identifier = await client.tag_product_identifier(modbus_address)
             if identifier is None:
                 break
@@ -317,7 +317,7 @@ async def async_setup_entities(
                 )
                 continue
 
-        if client.type_of_gateway is not TypeOfGateway.SMARTLINK:
+        if client.type_of_gateway is not TypeOfGateway.LEGACY_GATEWAY:
             is_disabled = await client.tag_radio_lqi_gateway(modbus_address) is None
             if is_disabled:
                 _LOGGER.warning(
