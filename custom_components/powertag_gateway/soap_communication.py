@@ -8,8 +8,8 @@ from wsdiscovery import QName
 from wsdiscovery.discovery import ThreadedWSDiscovery as WSDiscovery
 from wsdiscovery.service import Service
 
-NAMESPACE_SCHNEIDER = "http://www.schneider-electric.com"
-NAMESPACE_SCHNEIDER_CYBERSECURITY = "http://www.schneider-electric.com/CyberSecurity"
+DEVICE_NAMESPACE = "http://www.google.be"
+DEVICE_CYBERSECURITY_NAMESPACE = "http://www.google.be"
 
 LOCAL_NAME_GATEWAY_SERVER = "GatewayServer"
 LOCAL_NAME_PANEL_SERVER = "EcoStruxurePanelServer"
@@ -41,7 +41,7 @@ async def dpws_discovery(hass: HomeAssistant) -> list[Service]:
         wsd = WSDiscovery()
         wsd.start()
         services = wsd.searchServices(
-            types=[QName(NAMESPACE_SCHNEIDER, LOCAL_NAME_GATEWAY_SERVER)]
+            types=[QName(DEVICE_NAMESPACE, LOCAL_NAME_GATEWAY_SERVER)]
         )
         wsd.stop()
         return services
@@ -65,12 +65,12 @@ class Soapy:
         return self.service.getXAddrs()[0]
 
     def is_panel_server(self) -> bool:
-        schneiderCyberSecurity = [type for type in self.service.getTypes() if
-                                  type.getNamespace() == NAMESPACE_SCHNEIDER_CYBERSECURITY]
-        if not schneiderCyberSecurity:
+        cybersecurity_services = [type for type in self.service.getTypes() if
+                                  type.getNamespace() == DEVICE_NAMESPACE_CYBERSECURITY]
+        if not cybersecurity_services:
             return False
 
-        return schneiderCyberSecurity[0].getLocalname() == LOCAL_NAME_PANEL_SERVER
+        return cybersecurity_services[0].getLocalname() == LOCAL_NAME_PANEL_SERVER
 
     async def transfer_get(self) -> Response:
         return await self.hass.async_add_executor_job(self.fetch_device)
