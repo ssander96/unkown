@@ -51,7 +51,7 @@ class PowerTagResetPeakDemand(WirelessDeviceEntity, ButtonEntity):
 
     @staticmethod
     def supports_gateway(type_of_gateway: TypeOfGateway) -> bool:
-        return type_of_gateway in [TypeOfGateway.SMARTLINK, TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_SERVER]
+        return type_of_gateway in [     TypeOfGateway.LEGACY_GATEWAY,     TypeOfGateway.LINK_GATEWAY,     TypeOfGateway.PANEL_GATEWAY, ]
 
 
 class PowerTagResetActiveEnergyDelivered(WirelessDeviceEntity, ButtonEntity):
@@ -72,7 +72,7 @@ class PowerTagResetActiveEnergyDelivered(WirelessDeviceEntity, ButtonEntity):
 
     @staticmethod
     def supports_gateway(type_of_gateway: TypeOfGateway) -> bool:
-        return type_of_gateway in [TypeOfGateway.SMARTLINK, TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_SERVER]
+        return type_of_gateway in [     TypeOfGateway.LEGACY_GATEWAY,     TypeOfGateway.LINK_GATEWAY,     TypeOfGateway.PANEL_GATEWAY, ]
 
 
 class PowerTagResetActiveEnergyReceived(WirelessDeviceEntity, ButtonEntity):
@@ -93,7 +93,7 @@ class PowerTagResetActiveEnergyReceived(WirelessDeviceEntity, ButtonEntity):
 
     @staticmethod
     def supports_gateway(type_of_gateway: TypeOfGateway) -> bool:
-        return type_of_gateway in [TypeOfGateway.SMARTLINK, TypeOfGateway.POWERTAG_LINK, TypeOfGateway.PANEL_SERVER]
+        return type_of_gateway in [     TypeOfGateway.LEGACY_GATEWAY,     TypeOfGateway.LINK_GATEWAY,     TypeOfGateway.PANEL_GATEWAY, ]
 
 
 class PowerTagResetReactiveEnergyDelivered(WirelessDeviceEntity, ButtonEntity):
