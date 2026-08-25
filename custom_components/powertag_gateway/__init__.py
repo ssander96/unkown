@@ -4,16 +4,16 @@ import logging
 from enum import Enum, auto
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform, CONF_HOST, CONF_PORT, CONF_INTERNAL_URL
+from homeassistant.const import CONF_HOST, CONF_INTERNAL_URL, CONF_PORT, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from pymodbus.exceptions import ConnectionException
 
 from .const import (
     CONF_CLIENT,
-    DOMAIN,
-    CONF_TYPE_OF_GATEWAY,
     CONF_DEVICE_UNIQUE_ID_VERSION,
+    CONF_TYPE_OF_GATEWAY,
+    DOMAIN,
 )
 from .gateway_modbus import GatewayModbus, TypeOfGateway
 
@@ -35,31 +35,39 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     host = entry.data.get(CONF_HOST)
     port = entry.data.get(CONF_PORT)
     presentation_url = entry.data.get(CONF_INTERNAL_URL)
+
     type_of_gateway_string = entry.data.get(
-    CONF_TYPE_OF_GATEWAY, TypeOfGateway.LINK_GATEWAY.value
-)
-
-legacy_gateway_map = {
-    "Powertag Link": TypeOfGateway.LINK_GATEWAY,
-    "Panel server": TypeOfGateway.PANEL_GATEWAY,
-    "Smartlink SI D": TypeOfGateway.LEGACY_GATEWAY,
-}
-
-type_of_gateway = legacy_gateway_map.get(type_of_gateway_string)
-
-if type_of_gateway is None:
-    type_of_gateway = next(
-        (t for t in TypeOfGateway if t.value == type_of_gateway_string),
-        TypeOfGateway.LINK_GATEWAY,
+        CONF_TYPE_OF_GATEWAY,
+        TypeOfGateway.LINK_GATEWAY.value,
     )
+
+    legacy_gateway_map = {
+        "Powertag Link": TypeOfGateway.LINK_GATEWAY,
+        "Panel server": TypeOfGateway.PANEL_GATEWAY,
+        "Smartlink SI D": TypeOfGateway.LEGACY_GATEWAY,
+    }
+
+    type_of_gateway = legacy_gateway_map.get(type_of_gateway_string)
+
+    if type_of_gateway is None:
+        type_of_gateway = next(
+            (t for t in TypeOfGateway if t.value == type_of_gateway_string),
+            TypeOfGateway.LINK_GATEWAY,
+        )
+
     unique_id_version_val = entry.data.get(CONF_DEVICE_UNIQUE_ID_VERSION)
+
     if unique_id_version_val is None:
         unique_id_version = UniqueIdVersion.V0
     else:
         unique_id_version = UniqueIdVersion(unique_id_version_val)
 
     try:
-        client = await GatewayModbus.create(host, type_of_gateway, port)
+        client = await GatewayModbus.create(
+            host,
+            type_of_gateway,
+            port,
+        )
     except ConnectionException as e:
         raise ConfigEntryNotReady from e
 
@@ -69,24 +77,43 @@ if type_of_gateway is None:
         CONF_DEVICE_UNIQUE_ID_VERSION: unique_id_version,
     }
 
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    await hass.config_entries.async_forward_entry_setups(
+        entry,
+        PLATFORMS,
+    )
 
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+) -> bool:
     data = hass.data.get(DOMAIN, {}).get(entry.entry_id)
+
     if data is None:
         return True
-    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+    unload_ok = await hass.config_entries.async_unload_platforms(
+        entry,
+        PLATFORMS,
+    )
+
     if not unload_ok:
         return False
+
     client = data.get(CONF_CLIENT)
+
     if client is not None:
         try:
             if getattr(client, "client", None) is not None:
                 client.client.close()
         except Exception as err:
-            _LOGGER.warning("Error while closing Modbus client: %s", err)
+            _LOGGER.warning(
+                "Error while closing Modbus client: %s",
+                err,
+            )
+
     hass.data[DOMAIN].pop(entry.entry_id)
+
     return True
